@@ -1,0 +1,33 @@
+# Ignore build artifacts from Sphinx
+/html/
+/.doctrees/
+/.buildinfo
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# C extensions
+*.c
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Editor specific files
+*.swp
+*.swo
+*.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Ignore virtual environments
+venv/
+env/
+*.venv
