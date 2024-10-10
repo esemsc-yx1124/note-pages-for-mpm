@@ -1,0 +1,433 @@
+.. _python_scientific_commands:
+
+Lecture 01: Python 科学计算命令概述
+=========================
+
+本部分为 Python 科学计算命令的详细概述，涵盖了 NumPy 和 SciPy 的主要命令及其应用。
+
+.. toctree::
+   :maxdepth: 2
+
+   数组创建 <array_creation>
+   数组属性 <array_attributes>
+   数组操作 <array_operations>
+   文件操作 <file_operations>
+   多项式操作 <polynomial_operations>
+   内存效率 <memory_efficiency>
+   随机数生成 <random_number_generation>
+   线性代数 <linear_algebra>
+   数学操作 <math_operations>
+
+.. _array_creation:
+
+数组创建
+--------
+
+- **`np.array(list)`**
+
+  从 Python **list** 创建 **array**。
+
+  .. code-block:: python
+
+    import numpy as np
+    array = np.array([1, 2, 3])
+
+- **`np.arange(start, stop, step)`**
+
+  创建一个具有指定范围和步长的数组。
+
+  .. code-block:: python
+
+    array = np.arange(0, 10, 2)
+
+- **`np.linspace(start, stop, num)`**
+
+  创建一个具有均匀间隔值的数组。
+
+  .. code-block:: python
+
+    array = np.linspace(0, 1, 5)
+
+- **`np.geomspace(start, stop, num)`**
+
+  创建一个在对数刻度上均匀分布的数组。
+
+  .. code-block:: python
+
+    array = np.geomspace(1, 1000, 4)
+
+- **`np.logspace(start, stop, num)`**
+
+  创建一个在对数范围内均匀间隔的数组。
+
+  .. code-block:: python
+
+    array = np.logspace(1, 3, 3)
+
+.. _array_attributes:
+
+数组属性
+--------
+
+- **`array.ndim`**
+
+  获取数组的维数。
+
+  .. code-block:: python
+
+    array.ndim
+
+- **`array.shape`**
+
+  获取数组的形状（维度）。
+
+  .. code-block:: python
+
+    array.shape
+
+- **`array.size`**
+
+  获取数组的总元素数。
+
+  .. code-block:: python
+
+    array.size
+
+- **`array.dtype`**
+
+  获取数组元素的数据类型。
+
+  .. code-block:: python
+
+    array.dtype
+
+.. _array_operations:
+
+数组操作
+--------
+
+- **`array.reshape(new_shape)`**
+
+  改变数组的形状而不修改数据，创建视图。
+
+  .. code-block:: python
+
+    array.reshape((2, 5))
+
+- **`np.resize(array, new_shape)`**
+
+  调整数组大小，必要时创建新数组。
+
+  .. code-block:: python
+
+    np.resize(array, (3, 3))
+
+- **`array.copy()`**
+
+  创建数组的深拷贝，不共享数据内存。
+
+  .. code-block:: python
+
+    array_copy = array.copy()
+
+- **`array[start:stop:step]`**
+
+  对数组进行切片，创建视图，共享数据内存。
+
+  .. code-block:: python
+
+    array_slice = array[0:5:2]
+
+- **`np.concatenate((a1, a2), axis)`**
+
+  沿指定轴连接数组，创建新数组。
+
+  .. code-block:: python
+
+    combined_array = np.concatenate((array1, array2), axis=0)
+
+- **`np.split(array, indices_or_sections)`**
+
+  将数组分割为多个子数组。
+
+  .. code-block:: python
+
+    split_arrays = np.split(array, 3)
+
+- **`array.T`**
+
+  对数组进行转置，创建视图。
+
+  .. code-block:: python
+
+    transposed_array = array.T
+
+- **`np.ravel(array)`**
+
+  将多维数组展平为一维，创建视图（如果可能）。
+
+  .. code-block:: python
+
+    flattened_array = np.ravel(array)
+
+- **`array.flatten()`**
+
+  返回数组的副本，并展平成一维，创建深拷贝。
+
+  .. code-block:: python
+
+    flattened_array_copy = array.flatten()
+
+- **Fancy Indexing**
+
+  使用**整数数组**或**布尔数组**对数据进行选择和操作，返回一个副本而不是视图。
+
+  .. code-block:: python
+
+    indexed_array = array[[0, 2, 4]]
+
+.. _file_operations:
+
+文件操作
+--------
+
+- **`np.savetxt(filename, array, fmt)`**
+
+  将数组保存为文本文件。
+
+  .. code-block:: python
+
+    np.savetxt('data.txt', array, fmt='%d')
+
+  - **参数**：
+    - `filename`：保存的文件名，字符串类型。
+    - `array`：要保存的数组。
+    - `fmt`：可选参数，指定数据的格式。
+
+- **`np.loadtxt(filename, delimiter)`**
+
+  从文本文件中读取数据并将其转换为数组。
+
+  .. code-block:: python
+
+    loaded_array = np.loadtxt('data.txt', delimiter=',')
+
+  - **参数**：
+    - `filename`：要读取的文件名。
+    - `delimiter`：可选参数，指定分隔符。
+
+- **`np.save(filename, array)`**
+
+  将数组保存为 `.npy` 文件。
+
+  .. code-block:: python
+
+    np.save('data.npy', array)
+
+- **`np.load(filename)`**
+
+  从 `.npy` 文件加载数组。
+
+  .. code-block:: python
+
+    loaded_array = np.load('data.npy')
+
+.. _polynomial_operations:
+
+多项式操作
+----------
+
+- **`np.poly1d(coefficients)`**
+
+  创建一个多项式对象。
+
+  .. code-block:: python
+
+    p = np.poly1d([1, 2, 3])
+
+- **`np.polyval(p, x)`**
+
+  计算多项式在给定点的值。
+
+  .. code-block:: python
+
+    value = np.polyval(p, 2)
+
+- **`np.polyadd(p1, p2)`**
+
+  计算两个多项式的和。
+
+  .. code-block:: python
+
+    p_sum = np.polyadd(p1, p2)
+
+- **`np.polysub(p1, p2)`**
+
+  计算两个多项式的差。
+
+  .. code-block:: python
+
+    p_diff = np.polysub(p1, p2)
+
+- **`np.polymul(p1, p2)`**
+
+  计算两个多项式的乘积。
+
+  .. code-block:: python
+
+    p_product = np.polymul(p1, p2)
+
+- **`np.polydiv(p1, p2)`**
+
+  计算两个多项式的除法。
+
+  .. code-block:: python
+
+    p_quotient, p_remainder = np.polydiv(p1, p2)
+
+- **`np.roots(p)`**
+
+  计算多项式的根。
+
+  .. code-block:: python
+
+    roots = np.roots(p)
+
+- **`np.polyder(p)`**
+
+  计算多项式的导数。
+
+  .. code-block:: python
+
+    derivative = np.polyder(p)
+
+- **`np.polyint(p)`**
+
+  计算多项式的积分。
+
+  .. code-block:: python
+
+    integral = np.polyint(p)
+
+.. _memory_efficiency:
+
+内存效率
+--------
+
+- **视图与拷贝**：切片、转置、展平操作可能创建视图或拷贝。
+
+  .. code-block:: python
+
+    view = array[::2]
+    copy = array.copy()
+
+- **广播机制**：NumPy 使用广播机制来对不同形状的数组进行算术运算，节省内存。
+
+  .. code-block:: python
+
+    result = array + 5
+
+- **矢量化操作**：使用矢量化操作代替 Python 循环，提高性能并减少内存开销。
+
+  .. code-block:: python
+
+    result = array * 2
+
+.. _random_number_generation:
+
+随机数生成
+----------
+
+- **`np.random.ranf(size)`**：从均匀分布中生成随机数。
+
+  .. code-block:: python
+
+    random_values = np.random.ranf(5)
+
+- **`np.random.randint(low, high, size)`**：在指定范围内生成随机整数。
+
+  .. code-block:: python
+
+    random_integers = np.random.randint(0, 10, 5)
+
+- **`np.random.standard_normal(size)`**：从标准正态分布中生成随机样本。
+
+  .. code-block:: python
+
+    normal_values = np.random.standard_normal(5)
+
+.. _linear_algebra:
+
+线性代数
+--------
+
+- **`np.dot(a, b)`**：计算两个数组的点积。
+
+  .. code-block:: python
+
+    dot_product = np.dot(a, b)
+
+- **`np.linalg.norm(array)`**：计算数组的范数。
+
+  .. code-block:: python
+
+    norm = np.linalg.norm(array)
+
+- **`np.linalg.inv(matrix)`**：计算矩阵的逆。
+
+  .. code-block:: python
+
+    inverse = np.linalg.inv(matrix)
+
+- **`np.linalg.eig(matrix)`**：获取矩阵的特征值和特征向量。
+
+  .. code-block:: python
+
+    eigenvalues, eigenvectors = np.linalg.eig(matrix)
+
+.. _math_operations:
+
+数学操作
+--------
+
+- **`np.sum(array, axis)`**：计算数组在指定轴上的和。
+
+  .. code-block:: python
+
+    total_sum = np.sum(array, axis=0)
+
+- **`np.prod(array, axis)`**：计算数组在指定轴上的乘积。
+
+  .. code-block:: python
+
+    total_product = np.prod(array, axis=0)
+
+- **`np.cumsum(array, axis)`**：计算数组在指定轴上的累加和。
+
+  .. code-block:: python
+
+    cumulative_sum = np.cumsum(array, axis=0)
+
+- **`np.cumprod(array, axis)`**：计算数组在指定轴上的累积乘积。
+
+  .. code-block:: python
+
+    cumulative_product = np.cumprod(array, axis=0)
+
+- **`np.sqrt(array)`**：计算数组中每个元素的平方根。
+
+  .. code-block:: python
+
+    sqrt_values = np.sqrt(array)
+
+- **`np.exp(array)`**：计算数组中每个元素的指数值。
+
+  .. code-block:: python
+
+    exp_values = np.exp(array)
+
+- **`np.log(array)`**：计算数组中每个元素的自然对数。
+
+  .. code-block:: python
+
+    log_values = np.log(array)

@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lecture 02: Python 性能剖析与优化 &mdash; mpm_doc  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Lecture 01: Python 科学计算命令概述" href="lecture01.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            mpm_doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lecture01.html">Lecture 01: Python 科学计算命令概述</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Lecture 02: Python 性能剖析与优化</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">性能剖析与优化的基本概念</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python">使用 Python 进行性能分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">如何进行有效的性能分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#complexity-analysis">算法复杂度分析</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#o">大O表示法的意义</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">常见的大O复杂度</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#monte-carlo">Monte Carlo 方法与优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optimization-strategies">代码优化策略</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tools-summary">工具与命令总结</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">mpm_doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Lecture 02: Python 性能剖析与优化</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/lecture02.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lecture-02-python">
+<span id="python-opt"></span><h1>Lecture 02: Python 性能剖析与优化<a class="headerlink" href="#lecture-02-python" title="Link to this heading"></a></h1>
+<section id="id1">
+<h2>性能剖析与优化的基本概念<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>逐步增加剖析的粒度</strong>：<cite>%timeit</cite> -&gt; <cite>%prun</cite> -&gt; <cite>%lprun</cite></p>
+<ul>
+<li><p><strong>`%timeit`</strong>：用于快速测量代码片段的执行时间，适合简单的、运行时间较短的代码段。它可以给出平均执行时间和标准差，用于识别显而易见的性能问题。</p></li>
+<li><p><strong>`%prun`</strong>：适用于更复杂的性能剖析。它可以提供函数级别的剖析信息，包括每个函数的调用次数、总执行时间和累计执行时间，用于找出代码中的性能瓶颈。</p></li>
+<li><p><strong>`%lprun`</strong>：用于逐行分析代码性能，帮助识别在函数内部每一行代码的执行时间和执行次数。它提供了最高粒度的剖析信息，适合对复杂函数进行深入的性能优化。</p></li>
+</ul>
+</li>
+<li><p><strong>性能问题的重要性</strong></p>
+<ul>
+<li><p>代码效率如何影响项目的成功</p></li>
+</ul>
+</li>
+<li><p><strong>Profiling 代码性能</strong></p>
+<ul>
+<li><p>使用 <cite>time</cite> 模块简单测量运行时间
+- 代码示例：<cite>time.time()</cite></p></li>
+<li><p><strong>Wall Time vs CPU Time</strong>
+- <cite>Wall Time</cite>：从开始到结束的总时间，包括 I/O 等非计算时间。这意味着它衡量的是整个程序从启动到结束所花费的真实时间，包括程序等待输入输出或被操作系统调度的时间。
+- <strong>为什么关注 Wall Time</strong>：在计算密集型程序中，Wall Time 与 CPU Time 近似相同，因为主要耗费处理器时间，几乎没有或很少涉及 I/O 操作或其他延迟，这使得两者的耗时相差不大。
+- <cite>CPU Time</cite>：仅处理器计算的时间，不包括 I/O 等其他操作。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="python">
+<h2>使用 Python 进行性能分析<a class="headerlink" href="#python" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>line profiler 和 LP run 的使用</strong></p>
+<ul>
+<li><p><cite>line_profiler</cite> 是用于逐行分析代码性能的工具。需要通过 <cite>%lprun</cite> 魔术命令来运行逐行分析。</p></li>
+<li><p>在使用 <cite>%lprun</cite> 之前，必须先加载扩展，如：<cite>%load_ext line_profiler</cite>。</p></li>
+<li><p><cite>%lprun -f 函数名 函数调用</cite> 用于对特定函数进行逐行分析。</p></li>
+<li><p>分析结果包括每行代码的执行次数（hits）和占总执行时间的比例，这有助于找出性能瓶颈。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id2">
+<h2>如何进行有效的性能分析<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>使用 <cite>%prun</cite> 或 <cite>cProfile</cite> 进行性能剖析时，可以通过以下关键指标来评估和优化性能：
+- <strong>`ncalls`（调用次数）</strong>：高调用次数且执行时间长的函数是性能优化的重点。
+- <strong>`tottime`（总时间）</strong>：函数自身执行的总时间，不包括子函数调用的时间。
+- <strong>`cumtime`（累计时间）</strong>：函数执行时间加上所有子函数调用的时间。
+- <strong>`percall`（平均每次调用的时间）</strong>：通过 <cite>tottime/ncalls</cite> 和 <cite>cumtime/ncalls</cite> 计算。</p></li>
+<li><p>优化策略：优先优化高频调用、总执行时间较长的函数。</p></li>
+</ul>
+</section>
+<section id="complexity-analysis">
+<span id="id3"></span><h2>算法复杂度分析<a class="headerlink" href="#complexity-analysis" title="Link to this heading"></a></h2>
+</section>
+<section id="o">
+<h2>大O表示法的意义<a class="headerlink" href="#o" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>增长速度的描述</strong>：大O表示法用于描述算法的增长速度，通常以输入规模（n）变化时，算法的执行时间或空间使用量如何变化。</p></li>
+<li><p><strong>上界衡量</strong>：大O表示法用来衡量程序执行时间的上界（Upper Bound），即在最坏情况下，算法的执行时间如何增长。</p></li>
+<li><p><strong>输入规模 (n)</strong>：通常用来表示输入数据的规模大小。</p></li>
+<li><p><strong>主导项（Dominant Term）</strong>：在输入规模足够大时，主导项决定算法复杂度，其他次要项可以忽略。</p></li>
+<li><p><strong>时间复杂度与空间复杂度</strong>：分别衡量算法的执行时间和内存消耗。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>常见的大O复杂度<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>O(1)</strong>：常数时间复杂度。</p></li>
+<li><p><strong>O(log n)</strong>：对数时间复杂度。</p></li>
+<li><p><strong>O(n)</strong>：线性时间复杂度。</p></li>
+<li><p><strong>O(n log n)</strong>：如归并排序和快速排序。</p></li>
+<li><p><strong>O(n²)</strong>：平方时间复杂度。</p></li>
+<li><p><strong>O(2^n)</strong> 和 <strong>O(n!)</strong>：指数和阶乘时间复杂度。</p></li>
+</ul>
+</section>
+<section id="monte-carlo">
+<span id="id5"></span><h2>Monte Carlo 方法与优化<a class="headerlink" href="#monte-carlo" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Monte Carlo 模拟计算 π 的方法</strong>
+- 生成随机点，计算点在圆内的比例估算 π 值。</p></li>
+<li><p><strong>性能剖析</strong>
+- 使用 <cite>%prun</cite> 和 <cite>%lprun</cite> 分析关键函数。</p></li>
+</ul>
+</section>
+<section id="optimization-strategies">
+<span id="id6"></span><h2>代码优化策略<a class="headerlink" href="#optimization-strategies" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>减少不必要的函数调用</strong></p></li>
+<li><p><strong>使用高效的数据结构与算法</strong></p></li>
+<li><p><strong>避免深度递归</strong>
+- 将递归转换为循环以提高效率</p></li>
+<li><p><strong>有效利用内存与缓存</strong></p></li>
+</ul>
+</section>
+<section id="tools-summary">
+<span id="id7"></span><h2>工具与命令总结<a class="headerlink" href="#tools-summary" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>time 模块</strong>：简单测量 Wall Time</p></li>
+<li><p><strong>timeit 模块</strong>：测量代码片段的 Wall Time
+- <cite>%timeit</cite> 和 <cite>%%timeit</cite> 魔术命令</p></li>
+<li><p><strong>cProfile</strong>：函数级别的性能分析
+- <cite>%prun</cite> 魔术命令</p></li>
+<li><p><strong>line profiler</strong>：逐行分析函数内部性能
+- <cite>%lprun</cite> 魔术命令</p></li>
+<li><p><strong>安装命令</strong>：
+- <cite>pip install line_profiler</cite> 用于安装 <cite>line_profiler</cite></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lecture01.html" class="btn btn-neutral float-left" title="Lecture 01: Python 科学计算命令概述" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

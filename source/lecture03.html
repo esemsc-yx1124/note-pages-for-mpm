@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lecture 03: Python Debug and Testing Guide &mdash; mpm_doc  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            mpm_doc
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../lecture01.html">Lecture 01: Python 科学计算命令概述</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lecture02.html">Lecture 02: Python 性能剖析与优化</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">mpm_doc</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Lecture 03:  Python Debug and Testing Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/lecture03.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="lecture-03-python-debug-and-testing-guide">
+<span id="python-debug-testing-guide"></span><h1>Lecture 03:  Python Debug and Testing Guide<a class="headerlink" href="#lecture-03-python-debug-and-testing-guide" title="Link to this heading"></a></h1>
+<p>本指南涵盖了 Python 中调试与测试的主要工具和技术，帮助开发者更好地理解和运用这些方法。目录如下：</p>
+<section id="id1">
+<h2>调试工具与技术<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p><strong>Python Traceback (回溯)</strong></p>
+<ul class="simple">
+<li><p>回溯中显示的最后一行是异常发生的位置。通常是查找错误的起点。</p></li>
+<li><p>常见错误类型包括：</p>
+<ul>
+<li><p><strong>NameError</strong>：引用未定义的变量。</p></li>
+<li><p><strong>TypeError</strong>：函数接受不正确或不支持的对象类型。</p></li>
+<li><p><strong>ImportError</strong> 和 <strong>ModuleNotFoundError</strong>：模块导入失败。</p></li>
+<li><p><strong>SyntaxError</strong>：代码编译阶段不符合 Python 语法。</p></li>
+<li><p><strong>RecursionError</strong>：递归调用超过最大深度。</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>静态分析工具</strong></p>
+<ul class="simple">
+<li><p>常用工具：<cite>pylint</cite>，<cite>pyflakes</cite>，<cite>flake8</cite>。</p></li>
+<li><p>区别：
+- <cite>flake8</cite> 是静态分析工具，在代码执行前运行，检查代码风格和语法问题。
+- 手动调试用于运行时调试，例如使用 <cite>print()</cite> 语句。</p></li>
+</ul>
+</section>
+<section id="python">
+<h2>Python 调试工作流<a class="headerlink" href="#python" title="Link to this heading"></a></h2>
+<p><strong>调试策略</strong></p>
+<ul class="simple">
+<li><p>使问题复现：找到稳定复现错误的测试用例。</p></li>
+<li><p>分而治之：逐步缩小问题范围。</p></li>
+<li><p>逐步测试修改：每次只修改一个因素，逐步找出错误。</p></li>
+</ul>
+<p><strong>最低失败示例（MFE）</strong></p>
+<ul class="simple">
+<li><p>MFE 是最小化的代码片段，用于稳定复现问题。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>手动调试技术<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p><strong>打印调试法</strong></p>
+<ul class="simple">
+<li><p>使用 <cite>print()</cite> 语句查看代码运行时的状态。</p></li>
+<li><p>适用于初步排查错误，特别是简单代码片段。</p></li>
+</ul>
+<p><strong>IPython 嵌入调试</strong></p>
+<ul class="simple">
+<li><p>使用 <cite>embed()</cite> 方法进入交互式调试环境。</p></li>
+<li><p>适用于需要实时探索和修改变量的场合，特别是在 Jupyter Notebook 中。</p></li>
+</ul>
+</section>
+<section id="python-pdb">
+<h2>Python 调试器（pdb）<a class="headerlink" href="#python-pdb" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>pdb</cite> 是 Python 自带的调试器，支持设置断点、逐行执行代码。</p></li>
+<li><p>适用于复杂的调试需求，通过 <cite>pdb.set_trace()</cite> 进入调试模式。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>图形调试器与替代工具<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p><strong>pudb</strong></p>
+<ul class="simple">
+<li><p>基于文本界面的调试器，类似 <cite>gdb</cite>，提供更友好的界面。</p></li>
+</ul>
+<p><strong>集成开发环境（IDE）调试器</strong></p>
+<ul class="simple">
+<li><p>集成在 IDE 中，如 PyCharm 和 VS Code，提供图形化调试界面。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>调试工具适用性总结<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p><strong>适用于 Jupyter Notebook 的调试工具</strong></p>
+<ul class="simple">
+<li><p><cite>IPython</cite> 嵌入调试，手动调试（<cite>print()</cite> 语句），<cite>pdb</cite> 调试器。</p></li>
+</ul>
+<p><strong>适用于 .py 文件的调试工具</strong></p>
+<ul class="simple">
+<li><p><cite>pdb</cite> 调试器，手动调试，静态分析工具（如 <cite>flake8</cite>）。</p></li>
+</ul>
+</section>
+<section id="bug">
+<h2>避免 Bug 的编程原则<a class="headerlink" href="#bug" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>保持简单（KISS）</p></li>
+<li><p>不重复（DRY）</p></li>
+<li><p>松耦合</p></li>
+<li><p>有意义的命名</p></li>
+<li><p>编写测试</p></li>
+</ul>
+</section>
+<section id="id5">
+<h2>测试种类与工具<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p><strong>单元测试（Unit Tests）</strong></p>
+<ul class="simple">
+<li><p>使用 <cite>pytest</cite> 进行单元测试，常用参数：
+- <cite>-v`（详细模式），</cite>-k`（匹配表达式），<cite>–maxfail`（设置最大失败次数），</cite>–tb`（回溯样式），<a href="#id6"><span class="problematic" id="id7">`</span></a>–cov`（代码覆盖率）。</p></li>
+</ul>
+<p><strong>其他测试类型</strong></p>
+<ul class="simple">
+<li><p>集成测试，功能测试，回归测试。</p></li>
+</ul>
+<p><strong>doctest 模块</strong></p>
+<ul class="simple">
+<li><p>在文档字符串中编写测试，使用 <cite>doctest.testmod()</cite> 运行测试。</p></li>
+<li><p>支持选项：<cite>doctest.ELLIPSIS</cite>，<cite>doctest.NORMALIZE_WHITESPACE</cite>。</p></li>
+</ul>
+</section>
+<section id="id8">
+<h2>自动化文档工具<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<p><strong>Sphinx 文档生成工具</strong></p>
+<ul class="simple">
+<li><p>安装：<cite>pip install sphinx</cite></p></li>
+<li><p>使用 <cite>reStructuredText</cite> 将文档字符串转换为 HTML 或 PDF。</p></li>
+</ul>
+</section>
+<section id="id9">
+<h2>代码覆盖率<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<p><strong>代码覆盖率的定义</strong></p>
+<ul class="simple">
+<li><p>代码覆盖率是指测试用例执行过程中，程序代码被执行的程度，用于衡量测试的充分性。</p></li>
+</ul>
+<p><strong>pytest-cov 插件</strong></p>
+<ul class="simple">
+<li><p>使用命令：<cite>python -m pytest –cov=mycoolproject</cite> 检查代码覆盖率。</p></li>
+<li><p>输出覆盖率报告，指出未被测试的代码行数。</p></li>
+</ul>
+</section>
+<section id="id10">
+<h2>数学解释与代码应用案例<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<p><strong>傅里叶级数的代码实现</strong></p>
+<ul>
+<li><p>通过代码实现傅里叶级数的求解和绘图。</p></li>
+<li><p><strong>示例代码</strong>：
+<a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a>python
+import numpy as np
+import matplotlib.pyplot as plt</p>
+<p>N = 1000
+x = np.linspace(-np.pi, np.pi, N)
+plt.plot(x, x**2, label=”$y(x)=x^2$”)
+plt.legend()
+plt.show()</p>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
