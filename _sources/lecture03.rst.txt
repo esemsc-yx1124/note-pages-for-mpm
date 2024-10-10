@@ -1,0 +1,147 @@
+.. _python_debug_testing_guide:
+
+Lecture 03:  Python Debug and Testing Guide
+==============================
+
+本指南涵盖了 Python 中调试与测试的主要工具和技术，帮助开发者更好地理解和运用这些方法。目录如下：
+
+
+
+调试工具与技术
+----
+
+**Python Traceback (回溯)**
+
+- 回溯中显示的最后一行是异常发生的位置。通常是查找错误的起点。
+- 常见错误类型包括：
+
+  - **NameError**：引用未定义的变量。
+  - **TypeError**：函数接受不正确或不支持的对象类型。
+  - **ImportError** 和 **ModuleNotFoundError**：模块导入失败。
+  - **SyntaxError**：代码编译阶段不符合 Python 语法。
+  - **RecursionError**：递归调用超过最大深度。
+
+**静态分析工具**
+
+- 常用工具：`pylint`，`pyflakes`，`flake8`。
+- 区别：
+  - `flake8` 是静态分析工具，在代码执行前运行，检查代码风格和语法问题。
+  - 手动调试用于运行时调试，例如使用 `print()` 语句。
+
+Python 调试工作流
+----
+
+**调试策略**
+
+- 使问题复现：找到稳定复现错误的测试用例。
+- 分而治之：逐步缩小问题范围。
+- 逐步测试修改：每次只修改一个因素，逐步找出错误。
+
+**最低失败示例（MFE）**
+
+- MFE 是最小化的代码片段，用于稳定复现问题。
+
+手动调试技术
+----
+
+**打印调试法**
+
+- 使用 `print()` 语句查看代码运行时的状态。
+- 适用于初步排查错误，特别是简单代码片段。
+
+**IPython 嵌入调试**
+
+- 使用 `embed()` 方法进入交互式调试环境。
+- 适用于需要实时探索和修改变量的场合，特别是在 Jupyter Notebook 中。
+
+Python 调试器（pdb）
+----
+
+- `pdb` 是 Python 自带的调试器，支持设置断点、逐行执行代码。
+- 适用于复杂的调试需求，通过 `pdb.set_trace()` 进入调试模式。
+
+图形调试器与替代工具
+----
+
+**pudb**
+
+- 基于文本界面的调试器，类似 `gdb`，提供更友好的界面。
+
+**集成开发环境（IDE）调试器**
+
+- 集成在 IDE 中，如 PyCharm 和 VS Code，提供图形化调试界面。
+
+调试工具适用性总结
+----
+
+**适用于 Jupyter Notebook 的调试工具**
+
+- `IPython` 嵌入调试，手动调试（`print()` 语句），`pdb` 调试器。
+
+**适用于 .py 文件的调试工具**
+
+- `pdb` 调试器，手动调试，静态分析工具（如 `flake8`）。
+
+避免 Bug 的编程原则
+----
+
+- 保持简单（KISS）
+- 不重复（DRY）
+- 松耦合
+- 有意义的命名
+- 编写测试
+
+测试种类与工具
+----
+
+**单元测试（Unit Tests）**
+
+- 使用 `pytest` 进行单元测试，常用参数：
+  - `-v`（详细模式），`-k`（匹配表达式），`--maxfail`（设置最大失败次数），`--tb`（回溯样式），`--cov`（代码覆盖率）。
+
+**其他测试类型**
+
+- 集成测试，功能测试，回归测试。
+
+**doctest 模块**
+
+- 在文档字符串中编写测试，使用 `doctest.testmod()` 运行测试。
+- 支持选项：`doctest.ELLIPSIS`，`doctest.NORMALIZE_WHITESPACE`。
+
+自动化文档工具
+----
+
+**Sphinx 文档生成工具**
+
+- 安装：`pip install sphinx`
+- 使用 `reStructuredText` 将文档字符串转换为 HTML 或 PDF。
+
+代码覆盖率
+----
+
+**代码覆盖率的定义**
+
+- 代码覆盖率是指测试用例执行过程中，程序代码被执行的程度，用于衡量测试的充分性。
+
+**pytest-cov 插件**
+
+- 使用命令：`python -m pytest --cov=mycoolproject` 检查代码覆盖率。
+- 输出覆盖率报告，指出未被测试的代码行数。
+
+数学解释与代码应用案例
+----
+
+**傅里叶级数的代码实现**
+
+- 通过代码实现傅里叶级数的求解和绘图。
+- **示例代码**：
+  ```python
+  import numpy as np
+  import matplotlib.pyplot as plt
+
+  N = 1000
+  x = np.linspace(-np.pi, np.pi, N)
+  plt.plot(x, x**2, label="$y(x)=x^2$")
+  plt.legend()
+  plt.show()
+  
